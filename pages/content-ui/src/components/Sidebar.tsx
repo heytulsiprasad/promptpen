@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
 import { LOGO_PROMPT_PEN } from "@src/app";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { Sidebar as SidebarIcon } from "react-feather";
 import clsx from "clsx";
 import Accordion from "./Accordion";
@@ -20,12 +20,13 @@ export type ArtStyleType = {
 
 type SidebarProps = {
   setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>;
+  writePromptToContent: (prompt: string) => void;
 };
 
 /**
  * The main sidebar component for the content app
  */
-const Sidebar = ({ setShowSidebar }: SidebarProps) => {
+const Sidebar = ({ setShowSidebar, writePromptToContent }: SidebarProps) => {
   const [artisticStyles, setArtisticStyles] = useState<ArtStyleType[]>([]);
   const [lensesAndPerspectives, setLensesAndPerspectives] = useState<
     ArtStyleType[]
@@ -51,6 +52,22 @@ const Sidebar = ({ setShowSidebar }: SidebarProps) => {
     aspectRatioAndFraming,
     miscellaneousEffects,
   });
+
+  // Function to generate the prompt
+  const handleSubmit = () => {
+    const prompt = [
+      ...artisticStyles,
+      ...lensesAndPerspectives,
+      ...lightingAndColorEffects,
+      ...textureAndSurfaceEffects,
+      ...aspectRatioAndFraming,
+      ...miscellaneousEffects,
+    ]
+      .map((item) => `${item.style} style (${item.prompt})`)
+      .join(", ");
+
+    writePromptToContent(prompt);
+  };
 
   return (
     <main
@@ -116,8 +133,11 @@ const Sidebar = ({ setShowSidebar }: SidebarProps) => {
 
         {/* Submit buttons */}
         <div className="mt-4 mb-8">
-          <button className="btn btn-primary w-full border-indigo-600">
-            Generate Prompt ✨
+          <button
+            className="btn btn-primary w-full border-indigo-600"
+            onClick={handleSubmit}
+          >
+            Paste to Prompt ⚡️
           </button>
         </div>
       </div>
