@@ -1,5 +1,6 @@
 import React from "react";
 import clsx from "clsx";
+import { LOGO_PROMPT_PEN } from "@src/app";
 
 type ToggleSidebarProps = {
   setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>;
@@ -19,7 +20,7 @@ const ToggleSidebar = ({ setShowSidebar }: ToggleSidebarProps) => {
         )}
         onClick={() => setShowSidebar(true)}
       >
-        <i>🌸</i>
+        <i>{LOGO_PROMPT_PEN}</i>
       </button>
     </div>
   );

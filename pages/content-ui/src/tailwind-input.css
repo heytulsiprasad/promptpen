@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.scrollable-container {
+  overflow: auto; /* Enable scrolling */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+
+  /* Optional: Set a max height or width if needed */
+  max-height: 100vh; /* Example: full viewport height */
+}
+
+/* Hide scrollbar for WebKit-based browsers (Chrome, Safari) */
+.scrollable-container::-webkit-scrollbar {
+  display: none;
+}
