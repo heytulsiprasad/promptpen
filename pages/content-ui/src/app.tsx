@@ -1,13 +1,23 @@
-import { useEffect } from 'react';
+import { useState } from "react";
+import ToggleSidebar from "./components/ToggleSidebar";
+import Sidebar from "./components/Sidebar";
 
-export default function App() {
-  useEffect(() => {
-    console.log('content ui loaded');
-  }, []);
+/**
+ * Entry point for the entire content app
+ */
+const App = () => {
+  // State to open the sidebar view
+  const [showSidebar, setShowSidebar] = useState(false);
 
   return (
-    <div className="flex gap-1 text-blue-500">
-      Edit <strong>pages/content-ui/src/app.tsx</strong> and save to reload.
+    <div className="">
+      {showSidebar ? (
+        <Sidebar setShowSidebar={setShowSidebar} />
+      ) : (
+        <ToggleSidebar setShowSidebar={setShowSidebar} />
+      )}
     </div>
   );
-}
+};
+
+export default App;
