@@ -20,13 +20,12 @@ export type ArtStyleType = {
 
 type SidebarProps = {
   setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>;
-  writePromptToContent: (prompt: string) => void;
 };
 
 /**
  * The main sidebar component for the content app
  */
-const Sidebar = ({ setShowSidebar, writePromptToContent }: SidebarProps) => {
+const Sidebar = ({ setShowSidebar }: SidebarProps) => {
   const [artisticStyles, setArtisticStyles] = useState<ArtStyleType[]>([]);
   const [lensesAndPerspectives, setLensesAndPerspectives] = useState<
     ArtStyleType[]
@@ -43,6 +42,9 @@ const Sidebar = ({ setShowSidebar, writePromptToContent }: SidebarProps) => {
   const [miscellaneousEffects, setMiscellaneousEffects] = useState<
     ArtStyleType[]
   >([]);
+
+  // State to show the copied message
+  const [copied, setCopied] = useState(false);
 
   console.log({
     artisticStyles,
@@ -66,7 +68,12 @@ const Sidebar = ({ setShowSidebar, writePromptToContent }: SidebarProps) => {
       .map((item) => `${item.style} style (${item.prompt})`)
       .join(", ");
 
-    writePromptToContent(prompt);
+    // Copy to clipboard
+    navigator.clipboard.writeText(prompt);
+
+    // Show the copied message
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
@@ -137,7 +144,7 @@ const Sidebar = ({ setShowSidebar, writePromptToContent }: SidebarProps) => {
             className="btn btn-primary w-full border-indigo-600"
             onClick={handleSubmit}
           >
-            Paste to Prompt ⚡️
+            {copied ? "Copied 🪄" : "Copy to Clipboard ⚡️"}
           </button>
         </div>
       </div>
