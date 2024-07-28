@@ -2,7 +2,6 @@
 import { LOGO_PROMPT_PEN } from "@src/app";
 import React, { useState } from "react";
 import { Sidebar as SidebarIcon } from "react-feather";
-import clsx from "clsx";
 import Accordion from "./Accordion";
 import {
   ARTISTIC_DATA,
@@ -77,9 +76,7 @@ const Sidebar = ({ setShowSidebar }: SidebarProps) => {
   };
 
   return (
-    <main
-      className={clsx("fixed top-0 right-0 w-80", "h-screen p-4 bg-slate-950")}
-    >
+    <main className="h-screen p-4 bg-slate-950">
       <div className="scrollable-container">
         {/* Navbar */}
         <nav className="flex flex-row items-center justify-between">
