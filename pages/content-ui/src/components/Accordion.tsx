@@ -27,7 +27,7 @@ const Accordion = ({ id, title, data, setData, src }: AccordionProps) => {
     <div className="collapse collapse-arrow bg-base-200">
       <input type="checkbox" id={`accordion-${id}`} className="peer" />
       <div className="collapse-title text-lg font-medium">{title}</div>
-      <div className="collapse-content grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="collapse-content grid grid-cols-2 gap-4">
         {src.map((item) => (
           <label key={item.style} className="flex items-center space-x-2">
             <input

@@ -41,22 +41,16 @@ const Sidebar = ({ setShowSidebar }: SidebarProps) => {
   const [miscellaneousEffects, setMiscellaneousEffects] = useState<
     ArtStyleType[]
   >([]);
+  const [customText, setCustomText] = useState<string>("");
+  const [position, setPosition] = useState<string>("");
+  const [customPosition, setCustomPosition] = useState<string>("");
 
   // State to show the copied message
   const [copied, setCopied] = useState(false);
 
-  console.log({
-    artisticStyles,
-    lensesAndPerspectives,
-    lightingAndColorEffects,
-    textureAndSurfaceEffects,
-    aspectRatioAndFraming,
-    miscellaneousEffects,
-  });
-
   // Function to generate the prompt
   const handleSubmit = () => {
-    const prompt = [
+    let prompt = [
       ...artisticStyles,
       ...lensesAndPerspectives,
       ...lightingAndColorEffects,
@@ -66,6 +60,15 @@ const Sidebar = ({ setShowSidebar }: SidebarProps) => {
     ]
       .map((item) => `${item.style} style (${item.prompt})`)
       .join(", ");
+
+    // Add the custom text
+    if (customText) {
+      prompt += `, add this text "${customText}"`;
+
+      //  Add the position of the custom text
+      if (position) prompt += ` at ${position} of the image`;
+      else if (customPosition) prompt += ` at ${customPosition} of the image`;
+    }
 
     // Copy to clipboard
     navigator.clipboard.writeText(prompt);
@@ -90,6 +93,10 @@ const Sidebar = ({ setShowSidebar }: SidebarProps) => {
 
         {/* Sidebar content */}
         <section className="mt-4">
+          <h2 className="text-white text-lg font-bold">
+            Choose your styles and effects
+          </h2>
+
           {/* Collapsible section starts */}
           <Accordion
             id={0}
@@ -133,6 +140,52 @@ const Sidebar = ({ setShowSidebar }: SidebarProps) => {
             setData={setMiscellaneousEffects}
             src={MISCELLANEOUS_EFFECTS_DATA}
           />
+        </section>
+
+        {/* Add text section */}
+        <section className="mt-4">
+          <h2 className="text-white text-lg font-bold">Add Custom Text</h2>
+          <input
+            type="text"
+            placeholder="Add text to the image"
+            className="input input-bordered w-full mt-2 focus:outline-none"
+            value={customText}
+            onChange={(e) => setCustomText(e.target.value)}
+          />
+
+          <p className="text-sm text-white font-bold my-2">
+            Choose the position
+          </p>
+          <select
+            className="select select-bordered w-full max-w-xs focus:outline-none"
+            value={position}
+            onChange={(e) => setPosition(e.target.value)}
+          >
+            <option disabled selected>
+              Where should we put your text?
+            </option>
+            <option>Center</option>
+            <option>Top Left</option>
+            <option>Top Center</option>
+            <option>Top Right</option>
+            <option>Bottom Left</option>
+            <option>Bottom Center</option>
+            <option>Bottom Right</option>
+          </select>
+
+          {/* Add a custom input box */}
+          <div className="my-2">
+            <p className="text-sm text-white font-bold italic">
+              Add a custom location
+            </p>
+            <input
+              type="text"
+              className="input input-bordered w-full mt-2 focus:outline-none"
+              placeholder="In the middle of image"
+              value={customPosition}
+              onChange={(e) => setCustomPosition(e.target.value)}
+            />
+          </div>
         </section>
 
         {/* Submit buttons */}
