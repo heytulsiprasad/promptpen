@@ -5,7 +5,4 @@ module.exports = {
   ...baseConfig,
   content: ["src/**/*.{ts,tsx}"],
   plugins: [require("daisyui")],
-  daisyui: {
-    themes: ["light", "dark", "cupcake"],
-  },
 };

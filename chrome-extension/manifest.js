@@ -27,7 +27,7 @@ const manifest = deepmerge(
     name: "__MSG_extensionName__",
     version: packageJson.version,
     description: "__MSG_extensionDescription__",
-    host_permissions: ["https://chatgpt.com/*"],
+    host_permissions: ["<all_urls>"],
     permissions: ["storage"],
     background: {
       service_worker: "background.iife.js",
@@ -42,15 +42,15 @@ const manifest = deepmerge(
     },
     content_scripts: [
       {
-        matches: ["https://chatgpt.com/*"],
+        matches: ["<all_urls>"],
         js: ["content/index.iife.js"],
       },
       {
-        matches: ["https://chatgpt.com/*"],
+        matches: ["<all_urls>"],
         js: ["content-ui/index.iife.js"],
       },
       {
-        matches: ["https://chatgpt.com/*"],
+        matches: ["<all_urls>"],
         css: ["content.css"], // public folder
       },
     ],
