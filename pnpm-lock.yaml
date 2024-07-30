@@ -272,6 +272,12 @@ importers:
       '@extension/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@extension/storage':
+        specifier: workspace:*
+        version: link:../../packages/storage
+      '@types/node':
+        specifier: ^20.14.10
+        version: 20.14.10
     devDependencies:
       '@extension/hmr':
         specifier: workspace:*

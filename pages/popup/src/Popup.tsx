@@ -4,10 +4,19 @@ import {
   useStorageSuspense,
 } from "@extension/shared";
 import { domainStorage } from "@extension/storage";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import clsx from "clsx";
 
 export const LOGO_PROMPT_PEN = "✍️";
+
+const isValidURL = (text: string): boolean => {
+  try {
+    new URL(text);
+    return true;
+  } catch (_) {
+    return false;
+  }
+};
 
 /**
  * The main component shown when user opens the popup
@@ -16,12 +25,34 @@ const Popup = () => {
   const [text, setText] = useState("");
   const [disableCurrentPage, setDisableCurrentPage] = useState(false);
 
+  useEffect(() => {
+    // Scan the stored domains to see if current page is added
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const currentTab = tabs[0];
+      const url = currentTab?.url || "";
+
+      let domain = "";
+
+      // When url exists store it in the storage
+      if (url) {
+        const parsedUrl = new URL(url);
+        domain = parsedUrl.origin;
+
+        // If domain exists inside domains only then enable the extension
+        if (domains.includes(domain)) setDisableCurrentPage(true);
+      }
+    });
+  });
+
   const storageData = useStorageSuspense(domainStorage);
   const { domains } = storageData;
 
   const handleAdd = (domain: string) => {
-    domainStorage.addDomain(domain);
-    setText(""); // cleanup
+    // Check if text is actually a valid URL
+    if (isValidURL(domain)) {
+      domainStorage.addDomain(domain);
+      setText(""); // cleanup
+    }
   };
 
   const handleRemove = (domain: string) => {
@@ -64,22 +95,28 @@ const Popup = () => {
         <div className="mt-2">
           <input
             type="text"
-            placeholder="Enter page URL"
+            placeholder="https://google.com"
             className="w-full p-2 rounded-md bg-slate-800 text-white"
             value={text}
             onChange={(e) => setText(e.target.value)}
           />
           <div className="flex gap-x-2">
             <button
-              className="mt-2 bg-orange-600 p-2 rounded-md text-white w-full"
+              className={clsx(
+                "mt-2 bg-orange-600 p-2 rounded-md text-white w-full",
+                (!text || !isValidURL(text)) &&
+                  "cursor-not-allowed pointer-events-none opacity-40",
+              )}
               onClick={() => handleAdd(text)}
+              disabled={!text || !isValidURL(text)}
             >
               Add Page
             </button>
             <button
               className={clsx(
                 "mt-2 bg-purple-600 p-2 rounded-md text-white w-full",
-                disableCurrentPage && "btn-disabled",
+                (!text || !isValidURL(text)) &&
+                  "cursor-not-allowed pointer-events-none opacity-40",
               )}
               disabled={disableCurrentPage}
               onClick={handleAddCurrentPage}

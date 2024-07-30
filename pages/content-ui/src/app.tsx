@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ToggleSidebar from "./components/ToggleSidebar";
 import Sidebar from "./components/Sidebar";
 import { motion, AnimatePresence } from "framer-motion";
+import { useStorageSuspense } from "@extension/shared";
+import { domainStorage } from "@extension/storage";
+import clsx from "clsx";
 
 export const LOGO_PROMPT_PEN = "✍️";
 
@@ -20,11 +23,35 @@ const fadeVariants = {
  * Entry point for the entire content app
  */
 const App = () => {
+  // State to enable extension on the current page
+  const [enableExtension, setEnableExtension] = useState(false);
+
   // State to open the sidebar view
   const [showSidebar, setShowSidebar] = useState(false);
 
+  // Fetch the domains from storage
+  const storageData = useStorageSuspense(domainStorage);
+  const { domains } = storageData;
+
+  useEffect(() => {
+    console.log({ domains });
+
+    const url = window.location.href;
+
+    let domain = "";
+
+    // When url exists store it in the storage
+    if (url) {
+      const parsedUrl = new URL(url);
+      domain = parsedUrl.origin;
+
+      // If domain exists inside domains only then enable the extension
+      if (domains.includes(domain)) setEnableExtension(true);
+    }
+  }, [domains]);
+
   return (
-    <div className="">
+    <div className={clsx(!enableExtension && "hidden")}>
       <AnimatePresence>
         {showSidebar ? (
           <motion.div

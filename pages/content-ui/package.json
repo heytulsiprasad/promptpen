@@ -20,7 +20,9 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@extension/shared": "workspace:*"
+    "@extension/shared": "workspace:*",
+    "@extension/storage": "workspace:*",
+    "@types/node": "^20.14.10"
   },
   "devDependencies": {
     "@extension/tailwindcss-config": "workspace:*",
