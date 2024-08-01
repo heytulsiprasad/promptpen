@@ -1,7 +1,21 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import { useArtboard } from "@src/context/ArtboardContext";
+import { useStorageSuspense } from "@extension/shared";
+import { appStorage } from "@extension/storage";
+import { ArtConfigTypes, useArtboard } from "@src/context/ArtboardContext";
 import { generatePrompt } from "@src/utils/prompts";
-import React from "react";
+import { useState } from "react";
+import { nanoid } from "nanoid";
+import { Copy } from "react-feather";
+
+type PresetType = {
+  id: string;
+  name: string;
+  prompt: string;
+  artConfig: ArtConfigTypes;
+  customText: string;
+  position: string;
+  customPosition: string;
+};
 
 const Presets = () => {
   const {
@@ -11,18 +25,32 @@ const Presets = () => {
     position,
     handleClearFilters,
   } = useArtboard();
+  const [name, setName] = useState("");
+
+  const { presets } = useStorageSuspense(appStorage);
 
   const handleSavePreset = () => {
+    if (!name) return;
+
     const prompt = generatePrompt(
       artConfig,
       customText,
       position,
       customPosition,
     );
-    console.log({ prompt });
+
+    const newPreset: PresetType = {
+      id: nanoid(),
+      name,
+      prompt,
+      artConfig,
+      customText,
+      position,
+      customPosition,
+    };
 
     // Save prompt to preset
-    // TODO: Save prompt in json format
+    appStorage.addPreset(newPreset);
 
     // Clear filters
     handleClearFilters();
@@ -45,6 +73,8 @@ const Presets = () => {
             name="preset-name"
             placeholder="Type here"
             className="input input-bordered w-full max-w-xs focus:outline-none"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
         </label>
 
@@ -59,19 +89,21 @@ const Presets = () => {
       {/* List of all presets */}
       <section className="mt-4">
         <h2 className="text-lg text-white font-bold">Your presets</h2>
-        <div className="grid grid-cols-2 gap-4 mt-2">
-          <div className="card bg-slate-900">
-            <div className="card-body">
-              <h2 className="card-title">Preset 1</h2>
-              <p className="text-sm text-white">This is a preset</p>
-            </div>
-          </div>
-          <div className="card bg-slate-900">
-            <div className="card-body">
-              <h2 className="card-title">Preset 2</h2>
-              <p className="text-sm text-white">This is a preset</p>
-            </div>
-          </div>
+        <div className="grid grid-cols-1 gap-4 mt-2">
+          {presets &&
+            presets.map((preset: PresetType) => (
+              <div key={preset.id} className="card bg-slate-900">
+                <div className="card-body">
+                  <div className="flex gap-x-2 items-center">
+                    <h2 className="card-title">{preset.name}</h2>
+                    <div className="tooltip" data-tip="Click to copy">
+                      <Copy className="text-white" size={18} />
+                    </div>
+                  </div>
+                  <p className="text-sm text-white">{preset.prompt}</p>
+                </div>
+              </div>
+            ))}
         </div>
       </section>
     </div>

@@ -8,11 +8,7 @@ import {
   TEXTURE_AND_SURFACE_EFFECTS_DATA,
 } from "@src/data/styles";
 import Accordion from "../components/Accordion";
-import {
-  ArtCategory,
-  INITIAL_ART_CONFIG,
-  useArtboard,
-} from "@src/context/ArtboardContext";
+import { ArtCategory, useArtboard } from "@src/context/ArtboardContext";
 import { generatePrompt } from "@src/utils/prompts";
 
 /**
@@ -22,13 +18,13 @@ import { generatePrompt } from "@src/utils/prompts";
 const Artboard = () => {
   const {
     artConfig,
-    setArtConfig,
     customText,
     setCustomText,
     position,
     setPosition,
     customPosition,
     setCustomPosition,
+    handleClearFilters,
   } = useArtboard();
 
   // State to show the copied message
@@ -49,14 +45,6 @@ const Artboard = () => {
     // Show the copied message
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-  };
-
-  // Function to clear all the filters
-  const handleClearFilters = () => {
-    setArtConfig(INITIAL_ART_CONFIG);
-    setCustomText("");
-    setPosition("");
-    setCustomPosition("");
   };
 
   return (

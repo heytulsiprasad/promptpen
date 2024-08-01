@@ -3,7 +3,7 @@ import {
   withSuspense,
   useStorageSuspense,
 } from "@extension/shared";
-import { domainStorage } from "@extension/storage";
+import { appStorage } from "@extension/storage/lib";
 import { useEffect, useState } from "react";
 import clsx from "clsx";
 
@@ -44,19 +44,19 @@ const Popup = () => {
     });
   });
 
-  const storageData = useStorageSuspense(domainStorage);
+  const storageData = useStorageSuspense(appStorage);
   const { domains } = storageData;
 
   const handleAdd = (domain: string) => {
     // Check if text is actually a valid URL
     if (isValidURL(domain)) {
-      domainStorage.addDomain(domain);
+      appStorage.addDomain(domain);
       setText(""); // cleanup
     }
   };
 
   const handleRemove = (domain: string) => {
-    domainStorage.removeDomain(domain);
+    appStorage.removeDomain(domain);
   };
 
   const handleAddCurrentPage = () => {
@@ -72,7 +72,7 @@ const Popup = () => {
         domain = parsedUrl.origin;
 
         console.log({ url, parsedUrl, domain });
-        domainStorage.addDomain(domain);
+        appStorage.addDomain(domain);
 
         // Disable showing current page button
         setDisableCurrentPage(true);
@@ -115,7 +115,7 @@ const Popup = () => {
             <button
               className={clsx(
                 "mt-2 bg-purple-600 p-2 rounded-md text-white w-full",
-                (!text || !isValidURL(text)) &&
+                disableCurrentPage &&
                   "cursor-not-allowed pointer-events-none opacity-40",
               )}
               disabled={disableCurrentPage}

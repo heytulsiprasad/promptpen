@@ -4,12 +4,12 @@ import {
   type BaseStorage,
   SessionAccessLevel,
 } from "./base";
-import { domainStorage } from "./domainStorage";
+import { appStorage } from "./appStorage";
 
 export {
   createStorage,
   StorageType,
   SessionAccessLevel,
   BaseStorage,
-  domainStorage,
+  appStorage,
 };

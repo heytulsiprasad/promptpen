@@ -3,8 +3,8 @@ import ToggleSidebar from "./components/ToggleSidebar";
 import Sidebar from "./components/Sidebar";
 import { motion, AnimatePresence } from "framer-motion";
 import { useStorageSuspense } from "@extension/shared";
-import { domainStorage } from "@extension/storage";
 import clsx from "clsx";
+import { appStorage } from "@extension/storage/lib";
 import ArtboardProvider from "./context/ArtboardContext";
 
 export const LOGO_PROMPT_PEN = "✍️";
@@ -31,12 +31,9 @@ const App = () => {
   const [showSidebar, setShowSidebar] = useState(true);
 
   // Fetch the domains from storage
-  const storageData = useStorageSuspense(domainStorage);
-  const { domains } = storageData;
+  const { domains } = useStorageSuspense(appStorage);
 
   useEffect(() => {
-    console.log({ domains });
-
     const url = window.location.href;
 
     let domain = "";
