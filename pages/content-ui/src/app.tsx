@@ -27,7 +27,7 @@ const App = () => {
   const [enableExtension, setEnableExtension] = useState(false);
 
   // State to open the sidebar view
-  const [showSidebar, setShowSidebar] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(true);
 
   // Fetch the domains from storage
   const storageData = useStorageSuspense(domainStorage);
