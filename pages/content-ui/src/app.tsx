@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useStorageSuspense } from "@extension/shared";
 import { domainStorage } from "@extension/storage";
 import clsx from "clsx";
+import ArtboardProvider from "./context/ArtboardContext";
 
 export const LOGO_PROMPT_PEN = "✍️";
 
@@ -51,39 +52,41 @@ const App = () => {
   }, [domains]);
 
   return (
-    <div className={clsx(!enableExtension && "hidden")}>
-      <AnimatePresence>
-        {showSidebar ? (
-          <motion.div
-            key="sidebar"
-            className="fixed top-0 right-0 w-80"
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-            variants={slideVariants}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          >
-            <Sidebar setShowSidebar={setShowSidebar} />
-          </motion.div>
-        ) : (
-          <motion.div
-            className="fixed top-16 right-4"
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-            variants={fadeVariants}
-            transition={{
-              type: "spring",
-              stiffness: 100,
-              damping: 10,
-              mass: 1,
-            }}
-          >
-            <ToggleSidebar setShowSidebar={setShowSidebar} />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+    <ArtboardProvider>
+      <div className={clsx(!enableExtension && "hidden")}>
+        <AnimatePresence>
+          {showSidebar ? (
+            <motion.div
+              key="sidebar"
+              className="fixed top-0 right-0 w-80"
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              variants={slideVariants}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            >
+              <Sidebar setShowSidebar={setShowSidebar} />
+            </motion.div>
+          ) : (
+            <motion.div
+              className="fixed top-16 right-4"
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              variants={fadeVariants}
+              transition={{
+                type: "spring",
+                stiffness: 100,
+                damping: 10,
+                mass: 1,
+              }}
+            >
+              <ToggleSidebar setShowSidebar={setShowSidebar} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </ArtboardProvider>
   );
 };
 

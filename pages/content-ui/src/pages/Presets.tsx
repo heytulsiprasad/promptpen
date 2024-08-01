@@ -1,7 +1,33 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
+import { useArtboard } from "@src/context/ArtboardContext";
+import { generatePrompt } from "@src/utils/prompts";
 import React from "react";
 
 const Presets = () => {
+  const {
+    artConfig,
+    customText,
+    customPosition,
+    position,
+    handleClearFilters,
+  } = useArtboard();
+
+  const handleSavePreset = () => {
+    const prompt = generatePrompt(
+      artConfig,
+      customText,
+      position,
+      customPosition,
+    );
+    console.log({ prompt });
+
+    // Save prompt to preset
+    // TODO: Save prompt in json format
+
+    // Clear filters
+    handleClearFilters();
+  };
+
   return (
     <div>
       {/* Save to preset */}
@@ -24,7 +50,7 @@ const Presets = () => {
 
         <button
           className="btn btn-primary btn-outline w-full border-green-600"
-          onClick={() => {}}
+          onClick={handleSavePreset}
         >
           Save 🔥
         </button>

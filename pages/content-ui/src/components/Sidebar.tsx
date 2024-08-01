@@ -5,11 +5,6 @@ import { Sidebar as SidebarIcon, Zap, Home } from "react-feather";
 import Artboard from "../pages/Artboard";
 import Presets from "../pages/Presets";
 
-export type ArtStyleType = {
-  style: string;
-  prompt: string;
-};
-
 type SidebarProps = {
   setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -23,12 +18,12 @@ const Sidebar = ({ setShowSidebar }: SidebarProps) => {
   const [currentPage, setCurrentPage] = useState(ALL_PAGES[0]);
 
   // Save to preset
-  const handleSaveToPreset = () => {
-    // TODO: Create a page system
-    // Navigate to presets page with props
-    // Save to new sync storage
-    // Show presets tab to the user (use zap icon on top right corner)
-  };
+  // const handleSaveToPreset = () => {
+  // TODO: Create a page system
+  // Navigate to presets page with props
+  // Save to new sync storage
+  // Show presets tab to the user (use zap icon on top right corner)
+  // };
 
   console.log({ currentPage });
 

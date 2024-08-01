@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { ArtStyleType } from "../components/Sidebar";
+import { useState } from "react";
 import {
   ARTISTIC_DATA,
   ASPECT_RATIO_AND_FRAMING_DATA,
@@ -9,56 +8,40 @@ import {
   TEXTURE_AND_SURFACE_EFFECTS_DATA,
 } from "@src/data/styles";
 import Accordion from "../components/Accordion";
+import {
+  ArtCategory,
+  INITIAL_ART_CONFIG,
+  useArtboard,
+} from "@src/context/ArtboardContext";
+import { generatePrompt } from "@src/utils/prompts";
 
 /**
  * The main artboard component for the content app
  * where we can design prompts
  */
 const Artboard = () => {
-  const [artisticStyles, setArtisticStyles] = useState<ArtStyleType[]>([]);
-  const [lensesAndPerspectives, setLensesAndPerspectives] = useState<
-    ArtStyleType[]
-  >([]);
-  const [lightingAndColorEffects, setLightingAndColorEffects] = useState<
-    ArtStyleType[]
-  >([]);
-  const [textureAndSurfaceEffects, setTextureAndSurfaceEffects] = useState<
-    ArtStyleType[]
-  >([]);
-  const [aspectRatioAndFraming, setAspectRatioAndFraming] = useState<
-    ArtStyleType[]
-  >([]);
-  const [miscellaneousEffects, setMiscellaneousEffects] = useState<
-    ArtStyleType[]
-  >([]);
-  const [customText, setCustomText] = useState<string>("");
-  const [position, setPosition] = useState<string>("");
-  const [customPosition, setCustomPosition] = useState<string>("");
+  const {
+    artConfig,
+    setArtConfig,
+    customText,
+    setCustomText,
+    position,
+    setPosition,
+    customPosition,
+    setCustomPosition,
+  } = useArtboard();
 
   // State to show the copied message
   const [copied, setCopied] = useState(false);
 
   // Function to generate the prompt
   const handleSubmit = () => {
-    let prompt = [
-      ...artisticStyles,
-      ...lensesAndPerspectives,
-      ...lightingAndColorEffects,
-      ...textureAndSurfaceEffects,
-      ...aspectRatioAndFraming,
-      ...miscellaneousEffects,
-    ]
-      .map((item) => `${item.style} style (${item.prompt})`)
-      .join(", ");
-
-    // Add the custom text
-    if (customText) {
-      prompt += `, add this text "${customText}"`;
-
-      //  Add the position of the custom text
-      if (position) prompt += ` at ${position} of the image`;
-      else if (customPosition) prompt += ` at ${customPosition} of the image`;
-    }
+    const prompt = generatePrompt(
+      artConfig,
+      customText,
+      position,
+      customPosition,
+    );
 
     // Copy to clipboard
     navigator.clipboard.writeText(prompt);
@@ -70,12 +53,7 @@ const Artboard = () => {
 
   // Function to clear all the filters
   const handleClearFilters = () => {
-    setArtisticStyles([]);
-    setLensesAndPerspectives([]);
-    setLightingAndColorEffects([]);
-    setTextureAndSurfaceEffects([]);
-    setAspectRatioAndFraming([]);
-    setMiscellaneousEffects([]);
+    setArtConfig(INITIAL_ART_CONFIG);
     setCustomText("");
     setPosition("");
     setCustomPosition("");
@@ -93,43 +71,37 @@ const Artboard = () => {
         <Accordion
           id={0}
           title="Artistic Styles"
-          data={artisticStyles}
-          setData={setArtisticStyles}
+          config={ArtCategory.ARTISTIC}
           src={ARTISTIC_DATA}
         />
         <Accordion
           id={1}
           title="Lenses and Perspectives"
-          data={lensesAndPerspectives}
-          setData={setLensesAndPerspectives}
+          config={ArtCategory.LENSES_AND_PERSPECTIVES}
           src={LENSES_AND_PERSPECTIVES_DATA}
         />
         <Accordion
           id={2}
           title="Lighting and Color Effects"
-          data={lightingAndColorEffects}
-          setData={setLightingAndColorEffects}
+          config={ArtCategory.LIGHTING_AND_COLOR_EFFECTS}
           src={LIGHTING_AND_COLOR_EFFECTS_DATA}
         />
         <Accordion
           id={3}
           title="Texture and Surface Effects"
-          data={textureAndSurfaceEffects}
-          setData={setTextureAndSurfaceEffects}
+          config={ArtCategory.TEXTURE_AND_SURFACE_EFFECTS}
           src={TEXTURE_AND_SURFACE_EFFECTS_DATA}
         />
         <Accordion
           id={4}
           title="Aspect Ratio and Framing"
-          data={aspectRatioAndFraming}
-          setData={setAspectRatioAndFraming}
+          config={ArtCategory.ASPECT_RATIO_AND_FRAMING}
           src={ASPECT_RATIO_AND_FRAMING_DATA}
         />
         <Accordion
           id={5}
           title="Miscellaneous Effects"
-          data={miscellaneousEffects}
-          setData={setMiscellaneousEffects}
+          config={ArtCategory.MISCELLANEOUS_EFFECTS}
           src={MISCELLANEOUS_EFFECTS_DATA}
         />
       </section>
