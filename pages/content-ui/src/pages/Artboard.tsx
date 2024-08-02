@@ -10,12 +10,17 @@ import {
 import Accordion from "../components/Accordion";
 import { ArtCategory, useArtboard } from "@src/context/ArtboardContext";
 import { generatePrompt } from "@src/utils/prompts";
+import { ALL_PAGES } from "@src/components/Sidebar";
+
+type ArtboardProps = {
+  setCurrentPage: React.Dispatch<React.SetStateAction<string>>;
+};
 
 /**
  * The main artboard component for the content app
  * where we can design prompts
  */
-const Artboard = () => {
+const Artboard = ({ setCurrentPage }: ArtboardProps) => {
   const {
     artConfig,
     customText,
@@ -45,6 +50,12 @@ const Artboard = () => {
     // Show the copied message
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  // Save to preset
+  const handleSaveToPreset = () => {
+    // Navigate to presets page
+    setCurrentPage(ALL_PAGES[1]);
   };
 
   return (
@@ -148,7 +159,7 @@ const Artboard = () => {
         </button>
         <button
           className="btn btn-primary btn-outline w-full border-green-600"
-          onClick={() => {}}
+          onClick={handleSaveToPreset}
         >
           Save to Presets 🎨
         </button>

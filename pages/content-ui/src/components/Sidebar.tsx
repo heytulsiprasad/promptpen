@@ -9,7 +9,7 @@ type SidebarProps = {
   setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const ALL_PAGES = ["Artboard", "Presets"];
+export const ALL_PAGES = ["Artboard", "Presets"];
 
 /**
  * The main sidebar component for the content app
@@ -17,21 +17,13 @@ const ALL_PAGES = ["Artboard", "Presets"];
 const Sidebar = ({ setShowSidebar }: SidebarProps) => {
   const [currentPage, setCurrentPage] = useState(ALL_PAGES[0]);
 
-  // Save to preset
-  // const handleSaveToPreset = () => {
-  // TODO: Create a page system
-  // Navigate to presets page with props
-  // Save to new sync storage
-  // Show presets tab to the user (use zap icon on top right corner)
-  // };
-
   console.log({ currentPage });
 
   // Function to render the current page
   const renderPage = () => {
     switch (currentPage) {
       case ALL_PAGES[0]:
-        return <Artboard />;
+        return <Artboard setCurrentPage={setCurrentPage} />;
       case ALL_PAGES[1]:
         return <Presets />;
       default:
