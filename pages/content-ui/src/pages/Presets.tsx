@@ -3,9 +3,9 @@ import { useStorageSuspense } from "@extension/shared";
 import { appStorage } from "@extension/storage";
 import { ArtConfigTypes, useArtboard } from "@src/context/ArtboardContext";
 import { generatePrompt } from "@src/utils/prompts";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { nanoid } from "nanoid";
-import { Copy } from "react-feather";
+import { Copy, Trash2 } from "react-feather";
 
 type PresetType = {
   id: string;
@@ -26,6 +26,12 @@ const Presets = () => {
     handleClearFilters,
   } = useArtboard();
   const [name, setName] = useState("");
+  const [copied, setCopied] = useState(false);
+
+  // Whenever copied is true, set it to false after 2 seconds
+  useEffect(() => {
+    setTimeout(() => setCopied(false), 2000);
+  }, [copied]);
 
   const { presets } = useStorageSuspense(appStorage);
 
@@ -54,6 +60,19 @@ const Presets = () => {
 
     // Clear filters
     handleClearFilters();
+  };
+
+  const handleCopyPreset = (preset: PresetType) => {
+    // Copy to clipboard
+    navigator.clipboard.writeText(preset.prompt);
+
+    // Show the copied message
+    setCopied(true);
+  };
+
+  const handleDeletePreset = (preset: PresetType) => {
+    // Delete the preset
+    appStorage.removePreset(preset);
   };
 
   return (
@@ -94,11 +113,22 @@ const Presets = () => {
             presets.map((preset: PresetType) => (
               <div key={preset.id} className="card bg-slate-900">
                 <div className="card-body">
-                  <div className="flex gap-x-2 items-center">
+                  <div className="flex gap-x-2 items-start">
                     <h2 className="card-title">{preset.name}</h2>
-                    <div className="tooltip" data-tip="Click to copy">
+                    <button
+                      className="tooltip"
+                      data-tip={copied ? "Copied" : "Click to copy"}
+                      onClick={() => handleCopyPreset(preset)}
+                    >
                       <Copy className="text-white" size={18} />
-                    </div>
+                    </button>
+                    <button
+                      className="tooltip"
+                      data-tip="Click to delete"
+                      onClick={() => handleDeletePreset(preset)}
+                    >
+                      <Trash2 className="text-red-600" size={18} />
+                    </button>
                   </div>
                   <p className="text-sm text-white">{preset.prompt}</p>
                 </div>
